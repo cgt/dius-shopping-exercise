@@ -2,17 +2,23 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class CheckoutTest {
+    private val priceInCentsBySku = mapOf(
+        "atv" to 10950,
+        "ipd" to 54999,
+        "mbp" to 139999
+    )
+
     @Test
     fun `sell zero items`() {
-        val checkout = Checkout(emptyMap())
+        val checkout = Checkout(priceInCentsBySku)
         assertEquals(0, checkout.total())
     }
 
     @Test
     fun `sell one item`() {
         val sku = "ipd"
-        val priceInCents = 54999
-        val checkout = Checkout(mapOf(sku to priceInCents))
+        val priceInCents = priceInCentsBySku.getValue(sku)
+        val checkout = Checkout(priceInCentsBySku)
         checkout.scan(sku)
         assertEquals(priceInCents, checkout.total())
     }
@@ -20,8 +26,8 @@ class CheckoutTest {
     @Test
     fun `sell a different item`() {
         val sku = "mbp"
-        val priceInCents = 139999
-        val checkout = Checkout(mapOf(sku to priceInCents))
+        val priceInCents = priceInCentsBySku.getValue(sku)
+        val checkout = Checkout(priceInCentsBySku)
         checkout.scan(sku)
         assertEquals(priceInCents, checkout.total())
     }
@@ -30,15 +36,10 @@ class CheckoutTest {
     fun `sell multiple items`() {
         val ipdSku = "ipd"
         val mbpSku = "mbp"
-        val ipdPriceInCents = 54999
-        val mbpPriceInCents = 139999
+        val ipdPriceInCents = priceInCentsBySku.getValue(ipdSku)
+        val mbpPriceInCents = priceInCentsBySku.getValue(mbpSku)
 
-        val checkout = Checkout(
-            mapOf(
-                ipdSku to ipdPriceInCents,
-                mbpSku to mbpPriceInCents
-            )
-        )
+        val checkout = Checkout(priceInCentsBySku)
 
         checkout.scan(ipdSku)
         checkout.scan(mbpSku)
@@ -49,9 +50,6 @@ class CheckoutTest {
 
     @Test
     fun `sell one item from catalog`() {
-        val priceInCentsBySku = mapOf(
-            "atv" to 10950
-        )
         val checkout = Checkout(priceInCentsBySku)
 
         checkout.scan("atv")
