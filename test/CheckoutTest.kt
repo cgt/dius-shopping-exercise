@@ -1,6 +1,12 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
+@TestInstance(PER_CLASS)
 class CheckoutTest {
     private val priceInCentsBySku = mapOf(
         "atv" to 10950,
@@ -12,6 +18,24 @@ class CheckoutTest {
     fun `sell zero items`() {
         val checkout = Checkout(priceInCentsBySku)
         assertEquals(0, checkout.total())
+    }
+
+    @ParameterizedTest
+    @MethodSource("itemProvider")
+    fun `sell any one item`(item: Pair<String, Int>) {
+        val (sku, priceInCents) = item
+        val checkout = Checkout(priceInCentsBySku)
+
+        checkout.scan(sku)
+
+        assertEquals(priceInCents, checkout.total())
+    }
+
+    fun itemProvider(): Stream<Pair<String, Int>> {
+        return priceInCentsBySku
+            .entries
+            .map { kv -> kv.toPair() }
+            .stream()
     }
 
     @Test
