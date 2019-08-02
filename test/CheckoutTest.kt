@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 class CheckoutTest {
     @Test
     fun `sell zero items`() {
-        val checkout = Checkout()
+        val checkout = Checkout(emptyMap())
         assertEquals(0, checkout.total())
     }
 
@@ -61,7 +61,7 @@ class CheckoutTest {
 }
 
 class Checkout(
-    private val priceInCentsBySku: Map<String, Int> = emptyMap()
+    private val priceInCentsBySku: Map<String, Int>
 ) {
     private val scanned = ArrayList<String>()
 
