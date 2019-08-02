@@ -33,6 +33,15 @@ class CheckoutTest {
     }
 
     @Test
+    fun `sell yet another different item`() {
+        val checkout = Checkout(priceInCentsBySku)
+
+        checkout.scan("atv")
+
+        assertEquals(priceInCentsBySku["atv"], checkout.total())
+    }
+
+    @Test
     fun `sell multiple items`() {
         val ipdSku = "ipd"
         val mbpSku = "mbp"
@@ -46,15 +55,6 @@ class CheckoutTest {
 
         val expectedTotal = ipdPriceInCents + mbpPriceInCents
         assertEquals(expectedTotal, checkout.total())
-    }
-
-    @Test
-    fun `sell one item from catalog`() {
-        val checkout = Checkout(priceInCentsBySku)
-
-        checkout.scan("atv")
-
-        assertEquals(priceInCentsBySku["atv"], checkout.total())
     }
 }
 
