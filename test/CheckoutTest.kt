@@ -34,20 +34,39 @@ class CheckoutTest {
         val expectedTotal = ipdPriceInCents + mbpPriceInCents
         assertEquals(expectedTotal, checkout.total())
     }
+
+    @Test
+    fun `sell one item from catalog`() {
+        val priceInCentsBySku = mapOf(
+            "atv" to 10950
+        )
+        val checkout = Checkout(priceInCentsBySku)
+
+        checkout.scan("atv")
+
+        assertEquals(priceInCentsBySku["atv"], checkout.total())
+    }
 }
 
-class Checkout {
+class Checkout(
+    private val priceInCentsBySku: Map<String, Int> = emptyMap()
+) {
     private val scanned = ArrayList<String>()
 
     fun total(): Int {
         return scanned
             .map { item ->
-                if (item == "ipd") {
-                    54999
-                } else if (item == "mbp") {
-                    139999
+                val catalogPrice = priceInCentsBySku[item]
+                if (catalogPrice != null) {
+                    catalogPrice
                 } else {
-                    0
+                    if (item == "ipd") {
+                        54999
+                    } else if (item == "mbp") {
+                        139999
+                    } else {
+                        0
+                    }
                 }
             }
             .sum()
