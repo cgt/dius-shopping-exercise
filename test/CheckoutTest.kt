@@ -68,12 +68,7 @@ class Checkout(
     fun total(): Int {
         return scanned
             .map { item ->
-                val catalogPrice = priceInCentsBySku[item]
-                if (catalogPrice != null) {
-                    catalogPrice
-                } else {
-                    0
-                }
+                priceInCentsBySku.getOrDefault(item, 0)
             }
             .sum()
     }
