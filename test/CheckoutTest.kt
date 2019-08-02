@@ -4,28 +4,23 @@ import org.junit.jupiter.api.Test
 class CheckoutTest {
     @Test
     fun `sell zero items`() {
-        val checkout = Checkout()
         assertEquals(0, checkout.total())
     }
 
     @Test
     fun `sell one item`() {
-        val checkout = Checkout()
         checkout.scan("ipd")
         assertEquals(54999, checkout.total())
     }
 
     @Test
     fun `sell a different item`() {
-        val checkout = Checkout()
         checkout.scan("mbp")
         assertEquals(139999, checkout.total())
     }
 
     @Test
     fun `sell multiple items`() {
-        val checkout = Checkout()
-
         checkout.scan("ipd")
         checkout.scan("mbp")
 
@@ -34,22 +29,27 @@ class CheckoutTest {
         val expectedTotal = ipdPriceInCents + mbpPriceInCents
         assertEquals(expectedTotal, checkout.total())
     }
+
+    private val priceInCentsBySku = mapOf(
+        "ipd" to 54999,
+        "mbp" to 139999
+    )
+
+    private val checkout = Checkout(priceInCentsBySku)
+
+    @Test
+    fun `item prices come from catalog`() {
+        checkout.scan("ipd")
+        assertEquals(priceInCentsBySku["ipd"], checkout.total())
+    }
 }
 
-class Checkout {
+class Checkout(private val priceInCentsBySku: Map<String, Int>) {
     private val scanned = ArrayList<String>()
 
     fun total(): Int {
         return scanned
-            .map { item ->
-                if (item == "ipd") {
-                    54999
-                } else if (item == "mbp") {
-                    139999
-                } else {
-                    0
-                }
-            }
+            .map { item -> priceInCentsBySku[item] ?: TODO() }
             .sum()
     }
 
