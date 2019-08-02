@@ -34,11 +34,11 @@ class CheckoutTest {
 
     @Test
     fun `sell yet another different item`() {
+        val sku = "atv"
+        val priceInCents = priceInCentsBySku[sku]
         val checkout = Checkout(priceInCentsBySku)
-
-        checkout.scan("atv")
-
-        assertEquals(priceInCentsBySku["atv"], checkout.total())
+        checkout.scan(sku)
+        assertEquals(priceInCents, checkout.total())
     }
 
     @Test
