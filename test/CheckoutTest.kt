@@ -10,27 +10,39 @@ class CheckoutTest {
 
     @Test
     fun `sell one item`() {
-        val checkout = Checkout()
-        checkout.scan("ipd")
-        assertEquals(54999, checkout.total())
+        val sku = "ipd"
+        val priceInCents = 54999
+        val checkout = Checkout(mapOf(sku to priceInCents))
+        checkout.scan(sku)
+        assertEquals(priceInCents, checkout.total())
     }
 
     @Test
     fun `sell a different item`() {
-        val checkout = Checkout()
-        checkout.scan("mbp")
-        assertEquals(139999, checkout.total())
+        val sku = "mbp"
+        val priceInCents = 139999
+        val checkout = Checkout(mapOf(sku to priceInCents))
+        checkout.scan(sku)
+        assertEquals(priceInCents, checkout.total())
     }
 
     @Test
     fun `sell multiple items`() {
-        val checkout = Checkout()
-
-        checkout.scan("ipd")
-        checkout.scan("mbp")
-
+        val ipdSku = "ipd"
+        val mbpSku = "mbp"
         val ipdPriceInCents = 54999
         val mbpPriceInCents = 139999
+
+        val checkout = Checkout(
+            mapOf(
+                ipdSku to ipdPriceInCents,
+                mbpSku to mbpPriceInCents
+            )
+        )
+
+        checkout.scan(ipdSku)
+        checkout.scan(mbpSku)
+
         val expectedTotal = ipdPriceInCents + mbpPriceInCents
         assertEquals(expectedTotal, checkout.total())
     }
@@ -60,13 +72,7 @@ class Checkout(
                 if (catalogPrice != null) {
                     catalogPrice
                 } else {
-                    if (item == "ipd") {
-                        54999
-                    } else if (item == "mbp") {
-                        139999
-                    } else {
-                        0
-                    }
+                    0
                 }
             }
             .sum()
