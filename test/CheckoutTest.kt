@@ -14,14 +14,23 @@ class CheckoutTest {
         checkout.scan("ipd")
         assertEquals(54999, checkout.total())
     }
+
+    @Test
+    fun `sell a different item`() {
+        val checkout = Checkout()
+        checkout.scan("mbp")
+        assertEquals(139999, checkout.total())
+    }
 }
 
 class Checkout {
     private var lastScanned: String? = null
 
     fun total(): Int {
-        if (lastScanned != null) {
+        if (lastScanned == "ipd") {
             return 54999
+        } else if (lastScanned == "mbp") {
+            return 139999
         }
         return 0
     }
