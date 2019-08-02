@@ -21,21 +21,39 @@ class CheckoutTest {
         checkout.scan("mbp")
         assertEquals(139999, checkout.total())
     }
+
+    @Test
+    fun `sell multiple items`() {
+        val checkout = Checkout()
+
+        checkout.scan("ipd")
+        checkout.scan("mbp")
+
+        val ipdPriceInCents = 54999
+        val mbpPriceInCents = 139999
+        val expectedTotal = ipdPriceInCents + mbpPriceInCents
+        assertEquals(expectedTotal, checkout.total())
+    }
 }
 
 class Checkout {
-    private var lastScanned: String? = null
+    private val scanned = ArrayList<String>()
 
     fun total(): Int {
-        if (lastScanned == "ipd") {
-            return 54999
-        } else if (lastScanned == "mbp") {
-            return 139999
-        }
-        return 0
+        return scanned
+            .map { item ->
+                if (item == "ipd") {
+                    54999
+                } else if (item == "mbp") {
+                    139999
+                } else {
+                    0
+                }
+            }
+            .sum()
     }
 
     fun scan(sku: String) {
-        lastScanned = sku
+        scanned.add(sku)
     }
 }
