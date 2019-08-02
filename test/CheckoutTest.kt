@@ -39,33 +39,6 @@ class CheckoutTest {
     }
 
     @Test
-    fun `sell one item`() {
-        val sku = "ipd"
-        val priceInCents = priceInCentsBySku.getValue(sku)
-        val checkout = Checkout(priceInCentsBySku)
-        checkout.scan(sku)
-        assertEquals(priceInCents, checkout.total())
-    }
-
-    @Test
-    fun `sell a different item`() {
-        val sku = "mbp"
-        val priceInCents = priceInCentsBySku.getValue(sku)
-        val checkout = Checkout(priceInCentsBySku)
-        checkout.scan(sku)
-        assertEquals(priceInCents, checkout.total())
-    }
-
-    @Test
-    fun `sell yet another different item`() {
-        val sku = "atv"
-        val priceInCents = priceInCentsBySku[sku]
-        val checkout = Checkout(priceInCentsBySku)
-        checkout.scan(sku)
-        assertEquals(priceInCents, checkout.total())
-    }
-
-    @Test
     fun `sell multiple items`() {
         val ipdSku = "ipd"
         val mbpSku = "mbp"
