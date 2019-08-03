@@ -6,11 +6,15 @@ class Checkout(
     private val scanned = ArrayList<String>()
 
     fun total(): Int {
-        return scanned
+        var total = scanned
             .map { item ->
                 priceInCentsBySku.getOrDefault(item, 0)
             }
             .sum()
+        if (scanned.contains("mbp") && scanned.contains("vga")) {
+            total -= priceInCentsBySku.getValue("vga")
+        }
+        return total
     }
 
     fun scan(sku: String) {

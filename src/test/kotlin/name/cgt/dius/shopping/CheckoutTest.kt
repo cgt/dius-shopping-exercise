@@ -56,4 +56,15 @@ class CheckoutTest {
         val expectedTotal = ipdPriceInCents + mbpPriceInCents
         assertEquals(expectedTotal, checkout.total())
     }
+
+    @Test
+    fun `given scanned mbp, vga, deduct price of vga from total`() {
+        val expectedTotal = priceInCentsBySku.getValue("mbp")
+        val checkout = Checkout(priceInCentsBySku)
+
+        checkout.scan("mbp")
+        checkout.scan("vga")
+
+        assertEquals(expectedTotal, checkout.total())
+    }
 }
