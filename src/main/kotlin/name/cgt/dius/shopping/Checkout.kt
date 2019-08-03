@@ -11,7 +11,7 @@ class Checkout(
                 priceInCentsBySku.getOrDefault(item, 0)
             }
             .sum()
-        if (scanned.contains("vga")) {
+        if (scanned.contains("mbp") && scanned.contains("vga")) {
             total -= priceInCentsBySku.getValue("vga")
         }
         return total
