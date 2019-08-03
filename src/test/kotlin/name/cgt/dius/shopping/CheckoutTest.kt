@@ -1,3 +1,5 @@
+package name.cgt.dius.shopping
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
