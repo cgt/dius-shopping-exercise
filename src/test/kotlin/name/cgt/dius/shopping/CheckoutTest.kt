@@ -13,7 +13,8 @@ class CheckoutTest {
     private val priceInCentsBySku = mapOf(
         "atv" to 10950,
         "ipd" to 54999,
-        "mbp" to 139999
+        "mbp" to 139999,
+        "vga" to 3000
     )
 
     @Test
