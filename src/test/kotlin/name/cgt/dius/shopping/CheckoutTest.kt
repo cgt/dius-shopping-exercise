@@ -11,12 +11,20 @@ import java.util.stream.Stream
 
 @TestInstance(PER_CLASS)
 class CheckoutTest {
+
+    private val ATV = "atv"
+    private val IPD = "ipd"
+    private val MBP = "mbp"
+    private val VGA = "vga"
+
     private val priceInCentsBySku = mapOf(
-        "atv" to 10950,
-        "ipd" to 54999,
-        "mbp" to 139999,
-        "vga" to 3000
+        ATV to 10950,
+        IPD to 54999,
+        MBP to 139999,
+        VGA to 3000
     )
+
+    private fun price(sku: String) = priceInCentsBySku.getValue(sku)
 
     private lateinit var checkout: Checkout
 
@@ -49,13 +57,11 @@ class CheckoutTest {
 
     @Test
     fun `sell multiple items`() {
-        val ipdSku = "ipd"
-        val mbpSku = "mbp"
-        val ipdPriceInCents = priceInCentsBySku.getValue(ipdSku)
-        val mbpPriceInCents = priceInCentsBySku.getValue(mbpSku)
+        val ipdPriceInCents = price(IPD)
+        val mbpPriceInCents = price(MBP)
 
-        checkout.scan(ipdSku)
-        checkout.scan(mbpSku)
+        checkout.scan(IPD)
+        checkout.scan(MBP)
 
         val expectedTotal = ipdPriceInCents + mbpPriceInCents
         checkout.assertTotal(expectedTotal)
@@ -63,36 +69,34 @@ class CheckoutTest {
 
     @Test
     fun `given scanned mbp, vga, deduct price of vga from total`() {
-        val expectedTotal = priceInCentsBySku.getValue("mbp")
+        val expectedTotal = price(MBP)
 
-        checkout.scan("mbp")
-        checkout.scan("vga")
+        checkout.scan(MBP)
+        checkout.scan(VGA)
 
         checkout.assertTotal(expectedTotal)
     }
 
     @Test
     fun `given scanned mbp and 2 x vga, only deduct price of one vga from total`() {
-        val expectedTotal = priceInCentsBySku.getValue("mbp") + priceInCentsBySku.getValue("vga")
+        val expectedTotal = price(MBP) + price(VGA)
 
-        checkout.scan("mbp")
-        checkout.scan("vga")
-        checkout.scan("vga")
+        checkout.scan(MBP)
+        checkout.scan(VGA)
+        checkout.scan(VGA)
 
         checkout.assertTotal(expectedTotal)
     }
 
     @Test
     fun `given scanned 2 x mbp and 2 x vga, deduct price of two vga from total`() {
-        val mbpPrice = priceInCentsBySku.getValue("mbp")
-        val vgaPrice = priceInCentsBySku.getValue("vga")
-        val totalWithoutDiscount = (mbpPrice + vgaPrice) * 2
-        val expectedTotal = totalWithoutDiscount - 2 * vgaPrice
+        val totalWithoutDiscount = (price(MBP) + price(VGA)) * 2
+        val expectedTotal = totalWithoutDiscount - 2 * price(VGA)
 
-        checkout.scan("mbp")
-        checkout.scan("mbp")
-        checkout.scan("vga")
-        checkout.scan("vga")
+        checkout.scan(MBP)
+        checkout.scan(MBP)
+        checkout.scan(VGA)
+        checkout.scan(VGA)
 
         checkout.assertTotal(expectedTotal)
     }
