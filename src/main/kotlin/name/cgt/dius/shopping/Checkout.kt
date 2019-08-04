@@ -3,23 +3,29 @@ package name.cgt.dius.shopping
 import kotlin.math.min
 
 class Checkout(
-    private val priceInCentsBySku: Map<String, Int>
+    private val catalog: Catalog
 ) {
     private val scanned = ArrayList<String>()
 
     fun total(): Int {
         var total = scanned
             .map { item ->
-                priceInCentsBySku.getOrDefault(item, 0)
+                catalog.price(item)
             }
             .sum()
-        total -= freeVGAWithPurchaseOfMBPDiscount(scanned, priceInCentsBySku)
+        total -= freeVGAWithPurchaseOfMBPDiscount(scanned, catalog.priceInCentsBySku)
         return total
     }
 
     fun scan(sku: String) {
         scanned.add(sku)
     }
+}
+
+class Catalog(
+    val priceInCentsBySku: Map<String, Int>
+) {
+    fun price(sku: String): Int = priceInCentsBySku.getOrDefault(sku, 0)
 }
 
 private fun freeVGAWithPurchaseOfMBPDiscount(items: ArrayList<String>, catalog: Map<String, Int>): Int {

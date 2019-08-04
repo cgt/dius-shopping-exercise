@@ -24,13 +24,15 @@ class CheckoutTest {
         VGA to 3000
     )
 
+    private val catalog = Catalog(priceInCentsBySku)
+
     private fun price(sku: String) = priceInCentsBySku.getValue(sku)
 
     private lateinit var checkout: Checkout
 
     @BeforeEach
     fun setUp() {
-        checkout = Checkout(priceInCentsBySku)
+        checkout = Checkout(catalog)
     }
 
     @Test
