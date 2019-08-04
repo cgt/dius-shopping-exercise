@@ -26,7 +26,7 @@ class CheckoutTest {
 
     private val catalog = Catalog(priceInCentsBySku)
 
-    private fun price(sku: String) = priceInCentsBySku.getValue(sku)
+    private fun price(sku: String) = catalog.price(sku)
 
     private lateinit var checkout: Checkout
 
