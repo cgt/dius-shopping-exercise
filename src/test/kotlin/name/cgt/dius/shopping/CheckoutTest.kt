@@ -27,7 +27,7 @@ class CheckoutTest {
 
     @Test
     fun `sell zero items`() {
-        assertEquals(0, checkout.total())
+        checkout.assertTotal(0)
     }
 
     @ParameterizedTest
@@ -37,7 +37,7 @@ class CheckoutTest {
 
         checkout.scan(sku)
 
-        assertEquals(priceInCents, checkout.total())
+        checkout.assertTotal(priceInCents)
     }
 
     fun itemProvider(): Stream<Pair<String, Int>> {
@@ -54,12 +54,11 @@ class CheckoutTest {
         val ipdPriceInCents = priceInCentsBySku.getValue(ipdSku)
         val mbpPriceInCents = priceInCentsBySku.getValue(mbpSku)
 
-
         checkout.scan(ipdSku)
         checkout.scan(mbpSku)
 
         val expectedTotal = ipdPriceInCents + mbpPriceInCents
-        assertEquals(expectedTotal, checkout.total())
+        checkout.assertTotal(expectedTotal)
     }
 
     @Test
@@ -69,7 +68,7 @@ class CheckoutTest {
         checkout.scan("mbp")
         checkout.scan("vga")
 
-        assertEquals(expectedTotal, checkout.total())
+        checkout.assertTotal(expectedTotal)
     }
 
     @Test
@@ -80,7 +79,7 @@ class CheckoutTest {
         checkout.scan("vga")
         checkout.scan("vga")
 
-        assertEquals(expectedTotal, checkout.total())
+        checkout.assertTotal(expectedTotal)
     }
 
     @Test
@@ -95,6 +94,10 @@ class CheckoutTest {
         checkout.scan("vga")
         checkout.scan("vga")
 
-        assertEquals(expectedTotal, checkout.total())
+        checkout.assertTotal(expectedTotal)
     }
+}
+
+private fun Checkout.assertTotal(expectedCents: Int) {
+    assertEquals(expectedCents, total())
 }
