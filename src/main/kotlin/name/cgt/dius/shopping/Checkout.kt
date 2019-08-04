@@ -13,7 +13,7 @@ class Checkout(
                 catalog.price(item)
             }
             .sum()
-        total -= freeVGAWithPurchaseOfMBPDiscount(scanned, catalog.priceInCentsBySku)
+        total -= catalog.freeVGAWithPurchaseOfMBPDiscount(scanned)
         return total
     }
 
@@ -26,12 +26,13 @@ class Catalog(
     val priceInCentsBySku: Map<String, Int>
 ) {
     fun price(sku: String): Int = priceInCentsBySku.getOrDefault(sku, 0)
-}
 
-private fun freeVGAWithPurchaseOfMBPDiscount(items: ArrayList<String>, catalog: Map<String, Int>): Int {
-    val mbpQuantity = items.count { it == "mbp" }
-    val vgaQuantity = items.count { it == "vga" }
-    val freeVGAs = min(mbpQuantity, vgaQuantity)
-    val discount = freeVGAs * catalog.getValue("vga")
-    return discount
+    fun freeVGAWithPurchaseOfMBPDiscount(items: ArrayList<String>): Int {
+        val mbpQuantity = items.count { it == "mbp" }
+        val vgaQuantity = items.count { it == "vga" }
+        val freeVGAs = min(mbpQuantity, vgaQuantity)
+        val discount = freeVGAs * priceInCentsBySku.getValue("vga")
+        return discount
+    }
+
 }
