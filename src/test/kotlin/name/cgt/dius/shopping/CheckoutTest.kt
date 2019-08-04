@@ -1,6 +1,7 @@
 package name.cgt.dius.shopping
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
@@ -17,9 +18,15 @@ class CheckoutTest {
         "vga" to 3000
     )
 
+    private lateinit var checkout: Checkout
+
+    @BeforeEach
+    fun setUp() {
+        checkout = Checkout(priceInCentsBySku)
+    }
+
     @Test
     fun `sell zero items`() {
-        val checkout = Checkout(priceInCentsBySku)
         assertEquals(0, checkout.total())
     }
 
@@ -27,7 +34,6 @@ class CheckoutTest {
     @MethodSource("itemProvider")
     fun `sell any one item`(item: Pair<String, Int>) {
         val (sku, priceInCents) = item
-        val checkout = Checkout(priceInCentsBySku)
 
         checkout.scan(sku)
 
@@ -48,7 +54,6 @@ class CheckoutTest {
         val ipdPriceInCents = priceInCentsBySku.getValue(ipdSku)
         val mbpPriceInCents = priceInCentsBySku.getValue(mbpSku)
 
-        val checkout = Checkout(priceInCentsBySku)
 
         checkout.scan(ipdSku)
         checkout.scan(mbpSku)
@@ -60,7 +65,6 @@ class CheckoutTest {
     @Test
     fun `given scanned mbp, vga, deduct price of vga from total`() {
         val expectedTotal = priceInCentsBySku.getValue("mbp")
-        val checkout = Checkout(priceInCentsBySku)
 
         checkout.scan("mbp")
         checkout.scan("vga")
@@ -71,7 +75,6 @@ class CheckoutTest {
     @Test
     fun `given scanned mbp and 2 x vga, only deduct price of one vga from total`() {
         val expectedTotal = priceInCentsBySku.getValue("mbp") + priceInCentsBySku.getValue("vga")
-        val checkout = Checkout(priceInCentsBySku)
 
         checkout.scan("mbp")
         checkout.scan("vga")
@@ -86,7 +89,6 @@ class CheckoutTest {
         val vgaPrice = priceInCentsBySku.getValue("vga")
         val totalWithoutDiscount = (mbpPrice + vgaPrice) * 2
         val expectedTotal = totalWithoutDiscount - 2 * vgaPrice
-        val checkout = Checkout(priceInCentsBySku)
 
         checkout.scan("mbp")
         checkout.scan("mbp")
