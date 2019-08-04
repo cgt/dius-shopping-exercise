@@ -23,7 +23,7 @@ class Checkout(
 }
 
 class Catalog(
-    val priceInCentsBySku: Map<String, Int>
+    private val priceInCentsBySku: Map<String, Int>
 ) {
     fun price(sku: String): Int = priceInCentsBySku.getOrDefault(sku, 0)
 
