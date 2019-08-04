@@ -27,7 +27,7 @@ class Catalog(
 ) {
     fun price(sku: String): Int = priceInCentsBySku.getOrDefault(sku, 0)
 
-    fun freeVGAWithPurchaseOfMBPDiscount(items: ArrayList<String>): Int {
+    fun freeVGAWithPurchaseOfMBPDiscount(items: List<String>): Int {
         val mbpQuantity = items.count { it == "mbp" }
         val vgaQuantity = items.count { it == "vga" }
         val freeVGAs = min(mbpQuantity, vgaQuantity)
