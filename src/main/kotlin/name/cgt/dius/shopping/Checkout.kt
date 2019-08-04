@@ -1,5 +1,7 @@
 package name.cgt.dius.shopping
 
+import kotlin.math.min
+
 class Checkout(
     private val priceInCentsBySku: Map<String, Int>
 ) {
@@ -11,9 +13,10 @@ class Checkout(
                 priceInCentsBySku.getOrDefault(item, 0)
             }
             .sum()
-        if (scanned.contains("mbp") && scanned.contains("vga")) {
-            total -= priceInCentsBySku.getValue("vga")
-        }
+        val mbpQuantity = scanned.count { it == "mbp" }
+        val vgaQuantity = scanned.count { it == "vga" }
+        val freeVGAs = min(mbpQuantity, vgaQuantity)
+        total -= freeVGAs * priceInCentsBySku.getValue("vga")
         return total
     }
 
