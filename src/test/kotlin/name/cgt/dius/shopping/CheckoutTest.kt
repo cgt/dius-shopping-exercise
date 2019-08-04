@@ -67,4 +67,16 @@ class CheckoutTest {
 
         assertEquals(expectedTotal, checkout.total())
     }
+
+    @Test
+    fun `given scanned mbp and 2 x vga, only deduct price of one vga from total`() {
+        val expectedTotal = priceInCentsBySku.getValue("mbp") + priceInCentsBySku.getValue("vga")
+        val checkout = Checkout(priceInCentsBySku)
+
+        checkout.scan("mbp")
+        checkout.scan("vga")
+        checkout.scan("vga")
+
+        assertEquals(expectedTotal, checkout.total())
+    }
 }
